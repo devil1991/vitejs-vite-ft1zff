@@ -1,7 +1,7 @@
-import { LitElement, css, html } from 'lit';
-import { customElement, property, query, queryAll } from 'lit/decorators.js';
+import { LitElement, html } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
 
-const readFileAsDataURL = (file) => {
+const readFileAsDataURL = (file: any) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -23,12 +23,15 @@ const readFileAsDataURL = (file) => {
 @customElement('svg-image-gen')
 export class SVGImageGen extends LitElement {
   @query('#file_input')
+  // @ts-ignore
   fileInput: HTMLInputElement;
 
   @query('#svgContainer')
+  // @ts-ignore
   svgContainer: HTMLDivElement;
 
   @property({ attribute: false })
+  // @ts-ignore
   svgImages: SVGImageElement[];
 
   @property({})
@@ -37,6 +40,7 @@ export class SVGImageGen extends LitElement {
   }
 
   _handleFileSelect() {
+    // @ts-ignore
     const file = this.fileInput.files[0];
     const reader = new FileReader();
     reader.readAsText(file);
@@ -50,10 +54,11 @@ export class SVGImageGen extends LitElement {
     };
   }
 
-  _handleSVGImageSelect(svgImage) {
-    return async (event) => {
+  _handleSVGImageSelect(svgImage: any) {
+    return async (event: any) => {
       const result = await readFileAsDataURL(event.currentTarget.files[0]);
       svgImage.setAttribute('xlink:href', result);
+      // @ts-ignore
       this.querySelector(`#image-for-input-${svgImage.id}`).src = result;
     };
   }
@@ -107,7 +112,6 @@ export class SVGImageGen extends LitElement {
     </div>
       <div class="col-span-8 grid items-center justify-center">
         <div class="w-10/12" id="svgContainer">
-          ${this.svgContent}
         </div>
       </div>
     `;
