@@ -97,6 +97,30 @@ export class SVGImageGen extends LitElement {
     });
   }
 
+  downloadPNG () {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const data = this.svgContainer.querySelector('svg')?.innerHTML
+    const DOMURL = window.URL || window.webkitURL || window;
+
+    var img = new Image();
+    var svg = new Blob([data], {type: 'image/svg+xml'});
+    var url = DOMURL.createObjectURL(svg);
+
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0);
+      DOMURL.revokeObjectURL(url);
+      var png_img = canvas.toDataURL("image/png");
+      console.log(png_img)
+      var a = document.createElement("a"); //Create <a>
+      a.href = "data:image/png;base64," + ImageBase64; //Image Base64 Goes here
+      a.download = "Image.png"; //File name Here
+      a.click(); //Downloaded file
+    }
+
+    img.src = url;
+  }
+
   render() {
     return html`
     <div class="col-span-4 bg-gray-300 p-16">
@@ -111,6 +135,9 @@ export class SVGImageGen extends LitElement {
       </div>
     </div>
       <div class="col-span-8 grid items-center justify-center">
+        <div class="flex justify-end p-4">
+          <button @click='${this.downloadPNG}' type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button>
+        </div>
         <div class="w-10/12" id="svgContainer">
         </div>
       </div>
